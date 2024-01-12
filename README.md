@@ -8,5 +8,8 @@
 - Map: UV-coordinate-based tile map manager and renderer, including map chunking.
 - BaseSketch: Basic setup for a Processing Java game project.
 
+## Documentation
+ 📚 Documentation can be found on this repository's [GitHub wiki](https://github.com/leohumnew/processing-java-tools/wiki).
+
 ## Instructions
  📑 Download the libraries you want, then just add them into your Processing project folder and start using them!
