@@ -1,9 +1,11 @@
+import java.util.function.Function;
+
 // Class for managing UI elements
 class UIManager {
   private ArrayList<UIElement> UIElements = new ArrayList<UIElement>();
 
-  public void addUIElement(UIElement element) {
-      UIElements.add(element);
+  public void add(UIElement element) {
+    UIElements.add(element);
   }
 
   public void clearUIElements() {
@@ -31,20 +33,22 @@ class TextButton implements UIElement {
   private color buttonColor;
   private int x, y, width, height;
 
-  public TextButton(UIManager uiManager, int x, int y, int width, int height, color buttonColor, String text) {
+  TextButton(int x, int y, int width, int height, color buttonColor, String text) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.buttonColor = buttonColor;
     this.text = text;
-
-    uiManager.addUIElement(this);
   }
 
   public void render() {
     if(mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height) {
-      fill(buttonColor, 150);
+      if(mousePressed) {
+        fill(buttonColor, 150);
+      } else {
+        fill(buttonColor, 200);
+      }
     } else {
       fill(buttonColor);
     }
@@ -55,21 +59,29 @@ class TextButton implements UIElement {
 }
 
 class ImgButton implements UIElement {
-  private PImage image;
+  private PImage image, imageHover, imagePressed;
   private int x, y, width, height;
 
-  public ImgButton(UIManager uiManager, int x, int y, int width, int height, PImage image) {
+  ImgButton(int x, int y, int width, int height, PImage image, PImage imageHover, PImage imagePressed) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.image = image;
-
-    uiManager.addUIElement(this);
+    this.imageHover = imageHover;
+    this.imagePressed = imagePressed;
   }
 
   public void render() {
-    image(image, x, y, width, height);
+    if(mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height) {
+      if(mousePressed) {
+        image(imagePressed, x, y, width, height);
+      } else {
+        image(imageHover, x, y, width, height);
+      }
+    } else {
+      image(image, x, y, width, height);
+    }
   }
 }
 
@@ -77,12 +89,10 @@ class Text implements UIElement {
   private String text;
   private int x, y;
 
-  public Text(UIManager uiManager, int x, int y, String text) {
+  Text(int x, int y, String text) {
     this.x = x;
     this.y = y;
     this.text = text;
-
-    uiManager.addUIElement(this);
   }
 
   public void render() {
@@ -94,16 +104,53 @@ class Text implements UIElement {
 class FPSCounter implements UIElement {
   private int x, y;
 
-  public FPSCounter(UIManager uiManager, int x, int y) {
+  FPSCounter(int x, int y) {
     this.x = x;
     this.y = y;
-
-    uiManager.addUIElement(this);
   }
 
   public void render() {
     fill(255);
     // FPS, rounded to 0 decimal places
     text("FPS: " + Math.round(frameRate), x, y);
+  }
+}
+
+// FADE MANAGER //
+class FadeManager {
+  private int duration;
+  private int initTime;
+  private int fadeState = -1; // -1: Inactive, 0: Fading in, 1: Fading out
+  private int newValue;
+  private Function<Integer, Void> callback;
+
+  FadeManager(int duration) {
+    this.duration = duration / 2;
+  }
+
+  public void fade(Function<Integer, Void> callback, int newValue) {
+    this.callback = callback;
+    this.newValue = newValue;
+    fadeState = 0;
+    initTime = millis();
+  }
+
+  public void update() {
+    if (fadeState == -1) return;
+    else if (fadeState == 0) {
+      fill(0, constrain(map(millis(), initTime, initTime + duration, 0, 255), 0, 255));
+      if (millis() >= initTime + duration) {
+        callback.apply(newValue);
+        fadeState = 1;
+        initTime = millis();
+      }
+    } else if (fadeState == 1) {
+      fill(0, constrain(map(millis(), initTime, initTime + duration, 255, 0), 0, 255));
+      if (millis() >= initTime + duration) {
+        fadeState = -1;
+      }
+    }
+
+    rect(0, 0, width, height);
   }
 }

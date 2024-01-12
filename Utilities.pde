@@ -3,6 +3,7 @@ import java.awt.Toolkit;
 import java.awt.image.PixelGrabber;
 
 static class Utilities {
+  // IMAGE LOADING //
   // Image loading with PixelGrabber
   private static PImage[] loadImagePngCpyPx(PApplet sketch, String inFile, int w, int h, int xNum, int yNum) {
     Image image = Toolkit.getDefaultToolkit().createImage(sketch.dataPath(inFile)).getScaledInstance(w, h, Image.SCALE_DEFAULT);
@@ -26,4 +27,12 @@ static class Utilities {
   static PImage[] loadImagePng(PApplet sketch, String inFile, int size, int xNum, int yNum) { return loadImagePngCpyPx(sketch, inFile, size, size, xNum, yNum); }
   static PImage loadImagePng(PApplet sketch, String inFile, int w, int h) { return loadImagePngCpyPx(sketch, inFile, w, h, 1, 1)[0]; }
   static PImage loadImagePng(PApplet sketch, String inFile, int size) { return loadImagePngCpyPx(sketch, inFile, size, size, 1, 1)[0]; }
+
+  // ARRAY UTILITIES //
+  static boolean contains(int[] arr, int val) {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] == val) return true;
+    }
+    return false;
+  }
 }

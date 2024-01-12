@@ -1,10 +1,15 @@
+//import processing.sound.*;
+
 // VARIABLES //
-int stage = -1;
+int stage = -1; // -2 = Settings, -1 = Loading, 0 = Menu, 1 = Game
+FadeManager fadeManager = new FadeManager(2000);
 PImage loading;
 
 // MAIN FUNCTIONS //
 void settings() {
-  fullScreen(P2D);
+  SaveManager.loadSave();
+  if (SaveManager.getSetting(SaveManager.FULLSCREEN)) fullScreen(P2D);
+  else size(1280, 720, P2D);
 }
 
 void setup(){
@@ -20,8 +25,10 @@ void setup(){
 void draw(){
   background(0);
   if (stage == -2) drawSettings(); // Settings
-  else if (stage == -1) image(loading, 0, 0); // Loading screen
+  else if (stage == -1) image(loading, 0, 0, width, height); // Loading screen
   else if (stage == 0) drawMenu(); // Main menu
+
+  fadeManager.update(); // Update fade
 }
 
 // DRAW FUNCTIONS //
@@ -35,6 +42,15 @@ void drawMenu(){
 
 // LOAD ASSETS //
 void loadAssets(){
-  // TODO Utilities.loadImagePng();
-  stage = 0;
+  // Utilities.loadImagePng();
+  // new SoundFile(this, "sound.wav");
+  fadeManager.fade(changeStage, 0);
 }
+
+// CHANGE STAGE //
+Function<Integer, Void> changeStage = new Function<Integer, Void>() {
+  public Void apply(Integer i) {
+    stage = i;
+    return null;
+  }
+};
