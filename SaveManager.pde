@@ -1,6 +1,5 @@
 static class SaveManager {
   public static enum Setting {FULLSCREEN, LANGUAGE};
-  public static final String[2] LANGUAGES = {"en", "es"}; 
   private static final String SAVE_FILE = "save.dat";
   private static byte[] save;
 
