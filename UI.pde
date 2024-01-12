@@ -1,4 +1,4 @@
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 // Class for managing UI elements
 class UIManager {
@@ -61,6 +61,7 @@ class TextButton implements UIElement {
 class ImgButton implements UIElement {
   private PImage image, imageHover, imagePressed;
   private int x, y, width, height;
+  private boolean pressed = false;
 
   ImgButton(int x, int y, int width, int height, PImage image, PImage imageHover, PImage imagePressed) {
     this.x = x;
@@ -75,6 +76,9 @@ class ImgButton implements UIElement {
   public void render() {
     if(mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height) {
       if(mousePressed) {
+        if(!pressed) {
+          pressed = true;
+        }
         image(imagePressed, x, y, width, height);
       } else {
         image(imageHover, x, y, width, height);
@@ -122,13 +126,13 @@ class FadeManager {
   private int initTime;
   private int fadeState = -1; // -1: Inactive, 0: Fading in, 1: Fading out
   private int newValue;
-  private Function<Integer, Void> callback;
+  private Consumer<Integer> callback;
 
   FadeManager(int duration) {
     this.duration = duration / 2;
   }
 
-  public void fade(Function<Integer, Void> callback, int newValue) {
+  public void fade(Consumer<Integer> callback, int newValue) {
     this.callback = callback;
     this.newValue = newValue;
     fadeState = 0;
@@ -140,7 +144,7 @@ class FadeManager {
     else if (fadeState == 0) {
       fill(0, constrain(map(millis(), initTime, initTime + duration, 0, 255), 0, 255));
       if (millis() >= initTime + duration) {
-        if(callback != null) callback.apply(newValue);
+        if(callback != null) callback.accept(newValue);
         fadeState = 1;
         initTime = millis();
       }

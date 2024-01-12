@@ -48,9 +48,4 @@ void loadAssets(){
 }
 
 // CHANGE STAGE //
-Function<Integer, Void> changeStage = new Function<Integer, Void>() {
-  public Void apply(Integer i) {
-    stage = i;
-    return null;
-  }
-};
+Consumer<Integer> changeStage = i -> stage = i;
