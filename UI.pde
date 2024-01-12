@@ -140,7 +140,7 @@ class FadeManager {
     else if (fadeState == 0) {
       fill(0, constrain(map(millis(), initTime, initTime + duration, 0, 255), 0, 255));
       if (millis() >= initTime + duration) {
-        callback.apply(newValue);
+        if(callback != null) callback.apply(newValue);
         fadeState = 1;
         initTime = millis();
       }
