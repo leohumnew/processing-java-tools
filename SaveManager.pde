@@ -1,5 +1,4 @@
 static class SaveManager {
-  public static enum Setting {FULLSCREEN, LANGUAGE};
   private static final String SAVE_FILE = "save.dat";
   private static byte[] save;
 
@@ -19,7 +18,11 @@ static class SaveManager {
     sketch.saveBytes(SAVE_FILE, save);
   }
 
-  public static int getSetting(int setting) {
-    return save[setting];
+  public static int getSetting(String string) {
+    String[] settings = {"FULLSCREEN", "LANGUAGE"};
+    for(int i = 0; i < settings.length; i++) {
+      if(string.equals(settings[i])) return save[i];
+    }
+    return -1;
   }
 }

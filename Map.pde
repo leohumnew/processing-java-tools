@@ -1,11 +1,12 @@
 class Map {
-  private PShape TILE_CHUNK;
-  private byte[][] map;
-  private PShape[][] chunks;
-  private PImage texture;
-  private byte chunkTilesAcross, chunksX, chunksY;
-  private int tileSizePx, tileResolution;
-  private byte texTilesX;
+  private final byte[] NO_COLLISION = {}; // List of tiles with no collision
+  private PShape TILE_CHUNK; // Base tile chunk shape
+  private byte[][] map; // Map array, stores the type of each tile
+  private PShape[][] chunks; // Array of tile chunk PShapes
+  private PImage texture; // Tile texture map
+  private byte chunkTilesAcross, chunksX, chunksY; // Chunk size and number of chunks
+  private int tileSizePx, tileResolution; // Tile size in pixels and resolution of each tile in the texture map
+  private byte texTilesX; // Number of tiles in the texture map in the x direction
 
   Map(int chunkTilesAcross, int chunksX, int chunksY, int tileSizePixels) {
     this.tileSizePx = tileSizePixels;
@@ -27,7 +28,7 @@ class Map {
     this.chunksY = (byte) chunksY;
   }
 
-  void setTexture(PImage texture, int tilesX, int tileResolution) {
+  public void setTexture(PImage texture, int tilesX, int tileResolution) {
     this.texture = texture;
     this.texTilesX = (byte) tilesX;
     this.tileResolution = tileResolution;
@@ -38,7 +39,7 @@ class Map {
     }
   }
 
-  void updateChunk(int chunkX, int chunkY) {
+  public void updateChunk(int chunkX, int chunkY) {
     for (int i = 0; i < chunkTilesAcross; i++) {
       for (int j = 0; j < chunkTilesAcross; j++) {
         // Set the UV coordinates of the tile depending on the type specified in the map by getting the vertices of each child
@@ -52,7 +53,7 @@ class Map {
     }
   }
 
-  void render(int posX, int posY) {
+  public void render(int posX, int posY) {
     // Calculate the chunk coordinates of the player
     int chunkPxSize = chunkTilesAcross * tileSizePx;
     int chunkXPos = posX / chunkPxSize;
@@ -71,6 +72,10 @@ class Map {
         }
       }
     }
+  }
+
+  public byte getTile(int x, int y) {
+    return map[x][y];
   }
 
   private PShape createTileChunk(int tilesX, int tilesY, int tileSize) {

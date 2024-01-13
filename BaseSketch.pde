@@ -8,8 +8,8 @@ PImage loading;
 
 // MAIN FUNCTIONS //
 void settings() {
-  SaveManager.loadSave();
-  if (SaveManager.getSetting(SaveManager.FULLSCREEN)) fullScreen(P2D);
+  SaveManager.loadSave(this);
+  if (SaveManager.getSetting("FULLSCREEN") == 1) fullScreen(P2D);
   else size(1280, 720, P2D);
 }
 
