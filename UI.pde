@@ -20,6 +20,18 @@ class UIManager {
       element.render();
     }
   }
+
+  public void mouseClicked() {
+    for (UIElement element : UIElements) {
+      if (element instanceof Button) {
+        Button button = (Button) element;
+        if (button.isHovered()) {
+          button.callback.accept(0);
+          return;
+        }
+      }
+    }
+  }
 }
 
 // Interface for UI elements
@@ -28,16 +40,33 @@ interface UIElement {
 }
 
 // UI ELEMENT IMPLEMENTATIONS //
-class TextButton implements UIElement {
-  private String text;
-  private color buttonColor;
-  private int x, y, width, height;
+class Button implements UIElement {
+  protected int x, y, width, height;
+  protected Consumer<Integer> callback;
 
-  TextButton(int x, int y, int width, int height, color buttonColor, String text) {
+  Button(int x, int y, int width, int height, Consumer<Integer> callback) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.callback = callback;
+  }
+
+  public void render() {
+    return;
+  }
+
+  public boolean isHovered() {
+    return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height;
+  }
+}
+
+class TextButton extends Button {
+  private String text;
+  private color buttonColor;
+
+  TextButton(int x, int y, int width, int height, color buttonColor, String text, Consumer<Integer> callback) {
+    super(x, y, width, height, callback);
     this.buttonColor = buttonColor;
     this.text = text;
   }
@@ -58,27 +87,19 @@ class TextButton implements UIElement {
   }
 }
 
-class ImgButton implements UIElement {
+class ImgButton extends Button {
   private PImage image, imageHover, imagePressed;
-  private int x, y, width, height;
-  private boolean pressed = false;
 
-  ImgButton(int x, int y, int width, int height, PImage image, PImage imageHover, PImage imagePressed) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+  ImgButton(int x, int y, int width, int height, PImage image, PImage imageHover, PImage imagePressed, Consumer<Integer> callback) {
+    super(x, y, width, height, callback);
     this.image = image;
     this.imageHover = imageHover;
     this.imagePressed = imagePressed;
   }
 
   public void render() {
-    if(mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height) {
+    if(isHovered()) {
       if(mousePressed) {
-        if(!pressed) {
-          pressed = true;
-        }
         image(imagePressed, x, y, width, height);
       } else {
         image(imageHover, x, y, width, height);

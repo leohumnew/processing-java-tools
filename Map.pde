@@ -4,8 +4,8 @@ class Map {
   private PShape[][] chunks;
   private PImage texture;
   private byte chunkTilesAcross, chunksX, chunksY;
-  private int tileSizePx;
-  private byte texTilesX, tileResolution;
+  private int tileSizePx, tileResolution;
+  private byte texTilesX;
 
   Map(int chunkTilesAcross, int chunksX, int chunksY, int tileSizePixels) {
     this.tileSizePx = tileSizePixels;
@@ -30,7 +30,7 @@ class Map {
   void setTexture(PImage texture, int tilesX, int tileResolution) {
     this.texture = texture;
     this.texTilesX = (byte) tilesX;
-    this.tileResolution = (byte) tileResolution;
+    this.tileResolution = tileResolution;
     for (int i = 0; i < chunksX; i++) {
       for (int j = 0; j < chunksY; j++) {
         chunks[i][j].setTexture(this.texture);

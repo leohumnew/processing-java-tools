@@ -3,6 +3,7 @@
 // VARIABLES //
 int stage = -1; // -2 = Settings, -1 = Loading, 0 = Menu, 1 = Game
 FadeManager fadeManager = new FadeManager(2000);
+UIManager menuUI = new UIManager();
 PImage loading;
 
 // MAIN FUNCTIONS //
@@ -37,6 +38,7 @@ void drawSettings(){
 }
 
 void drawMenu(){
+  menuUI.render();
   // TODO
 }
 
@@ -49,3 +51,8 @@ void loadAssets(){
 
 // CHANGE STAGE //
 Consumer<Integer> changeStage = i -> stage = i;
+
+// INPUT //
+void mouseClicked() {
+  if (stage == 0) menuUI.mouseClicked();
+}
